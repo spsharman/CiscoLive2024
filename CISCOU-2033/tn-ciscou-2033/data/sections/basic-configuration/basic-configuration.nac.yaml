@@ -175,10 +175,10 @@ apic:
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
 
-        - name: 'network-security-groups'
+        - name: 'workload-security-groups'
           description: 'ESGs are used to define security groups' 
           endpoint_security_groups:
-            - name: 192.168.151.0_24
+            - name: production
               vrf: vrf-02
               shutdown: false
               intra_esg_isolation: false
@@ -187,7 +187,7 @@ apic:
                 - application_profile: 'network-segments'
                   endpoint_group: '192.168.151.0_24'
 
-            - name: 192.168.152.0_24
+            - name: development
               vrf: vrf-02
               shutdown: false
               intra_esg_isolation: false
