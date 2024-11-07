@@ -1,0 +1,21 @@
+apic:
+  new_interface_configuration: false
+  access_policies:
+
+# Physical Domains
+    physical_domains:
+      - name: firewalls
+        vlan_pool: firewalls
+
+# L3 Domains
+    routed_domains:
+      - name: ciscou-2033.vrf-01
+
+# VMM Domain
+  fabric_policies:
+      vmware_vmm_domains:
+        - name: hx-dev-01-vds-01
+          access_mode: read-write
+          tag_collection: false
+          allocation: dynamic
+          vlan_pool: hx-dev-01-vds-01

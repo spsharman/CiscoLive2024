@@ -1,12 +1,21 @@
+# Exclude Terraform state files
+*.tfstate
+*.tfstate.*
+
+# Exclude Terraform variable files
+*.tfvars
+*.tfvars.json
+
+# Exclude Terraform plan files
+plan.out
+
+# Exclude Terraform lock file
+terraform.lock.hcl
+
+# Exclude macOS system files
 .DS_Store
-/.DS_Store
-/.terraform*
-/.terraform.lock.hcl
-/plan.out
-/terraform.tfstate*
-/terraform.tfvars
-/deployment-notes.txt
-/baseline-files/*
-tn-*/terraform.tfstate
-tn-*/terraform.tfstate.backup
-tn-*/.DS_Store
+**/.DS_Store
+
+# Exclude .terraform directories
+.terraform/
+**/.terraform/
