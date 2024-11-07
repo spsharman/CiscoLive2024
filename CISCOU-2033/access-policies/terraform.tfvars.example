@@ -1,3 +1,0 @@
-apic_username = "api_user"
-apic_password = "some-complex-password"
-apic_url      = "https://apic-address"
