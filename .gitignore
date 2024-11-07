@@ -13,8 +13,8 @@ plan.out
 **/plan.out
 
 # Exclude Terraform lock file
-terraform.lock.hcl
-**/terraform.lock.hcl
+.terraform.lock.hcl
+**/.terraform.lock.hcl
 
 # Exclude macOS system files
 .DS_Store
