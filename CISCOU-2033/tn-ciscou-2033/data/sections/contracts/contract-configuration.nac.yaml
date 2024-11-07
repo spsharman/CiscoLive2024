@@ -1,0 +1,129 @@
+# This plan configures filters and contracts for the tenant, and applies them to:
+#
+# - EPGs
+# - ESGs
+# - L3out
+#
+---
+apic:
+  tenants:
+    - name: ciscou-2033
+
+# Define Filters
+      filters:
+        - name: 'icmp'
+          entries:
+            - name: 'icmp'
+              protocol: icmp
+
+        - name: 'src-any-dst-any'
+          entries:
+            - name: 'src-any-dst-any'
+              ethertype: unspecified
+
+        - name: 'tcp-src-any-dst-22'
+          entries:
+            - name: 'tcp-src-any-dst-22'
+              ethertype: ipv4
+              protocol: tcp
+              destination_from_port: 22
+              destination_to_port: 22
+
+        - name: 'tcp-src-any-dst-80'
+          entries:
+            - name: 'tcp-src-any-dst-80'
+              ethertype: ipv4
+              protocol: tcp
+              destination_from_port: 80
+              destination_to_port: 80
+
+        - name: 'tcp-src-any-dst-151'
+          entries:
+            - name: 'tcp-src-any-dst-151'
+              ethertype: ipv4
+              protocol: tcp
+              destination_from_port: 151
+              destination_to_port: 151
+
+        - name: 'tcp-src-any-dst-152'
+          entries:
+            - name: 'tcp-src-any-dst-152'
+              ethertype: ipv4
+              protocol: tcp
+              destination_from_port: 152
+              destination_to_port: 152
+
+        - name: 'tcp-src-any-dst-443'
+          entries:
+            - name: 'tcp-src-any-dst-443'
+              ethertype: ipv4
+              protocol: tcp
+              destination_from_port: 443
+              destination_to_port: 443
+
+# Define Contracts
+      contracts:
+          - name: permit-to-esg-192.168.151.0_24
+            scope: tenant
+            subjects:
+              - name: tcp
+                filters:
+                  - filter: 'tcp-src-any-dst-151'
+                    action: permit
+
+          - name: permit-to-esg-192.168.152.0_24
+            scope: tenant
+            subjects:
+              - name: tcp
+                filters:
+                  - filter: 'tcp-src-any-dst-152'
+                    action: permit
+
+          - name: permit-to-firewall-connectivity-ftd-mgmt
+            subjects:
+                - name: tcp
+                  filters:
+                    - filter: 'tcp-src-any-dst-443'
+                      action: permit
+
+# Apply contracts to L3out
+      l3outs:
+        - name: ciscou-2033.vrf-01-ospf-area-0.0.0.1
+          vrf: vrf-01
+          domain: ciscou-2033.vrf-01
+          external_endpoint_groups:
+            - name: all-external-subnets
+              contracts:
+                consumers:
+                  - permit-to-esg-192.168.151.0_24
+                  - permit-to-esg-192.168.152.0_24
+                  - permit-to-firewall-connectivity-ftd-mgmt
+
+# Apply contracts to ESGs
+      application_profiles:
+        - name: 'network-security-groups'
+          endpoint_security_groups:
+            - name: epg-192.168.151.0_24
+              vrf: vrf-02
+              contracts:
+                consumers:
+                  - permit-to-esg-192.168.152.0_24
+                providers:
+                  - permit-to-esg-192.168.151.0_24
+
+            - name: epg-192.168.152.0_24
+              vrf: vrf-02
+              contracts:
+                consumers:
+                  - permit-to-esg-192.168.151.0_24
+                providers:
+                  - permit-to-esg-192.168.152.0_24
+
+# Apply contracts to EPGs
+        # - name: 'firewall-connectivity'
+        #   endpoint_groups:
+        #     - name: ftd-mgmt
+        #       bridge_domain: 10.237.100.0_24
+        #       contracts:
+        #         providers:
+        #           - permit-to-firewall-connectivity-ftd-mgmt
