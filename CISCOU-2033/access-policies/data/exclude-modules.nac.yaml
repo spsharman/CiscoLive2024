@@ -1,5 +1,0 @@
-# ---
-# defaults:
-#   apic:
-#     modules:
-#       aci_fabric_wide_settings: false 
