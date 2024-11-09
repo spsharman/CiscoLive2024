@@ -314,8 +314,8 @@ apic:
               contracts:
                 consumers:
                   - permit-to-firewall-connectivity-ftd-mgmt
-                  - permit-to-esg-192.168.151.0_24
-                  - permit-to-esg-192.168.152.0_24
+                  - permit-to-esg-production
+                  - permit-to-esg-development
 
 # Bridge Domains
       bridge_domains:
@@ -453,7 +453,7 @@ apic:
 
 # Define Contracts
       contracts:
-          - name: permit-to-esg-192.168.151.0_24
+          - name: permit-to-esg-production
             scope: tenant
             subjects:
               - name: tcp
@@ -461,7 +461,7 @@ apic:
                   - filter: 'tcp-src-any-dst-151'
                     action: permit
 
-          - name: permit-to-esg-192.168.152.0_24
+          - name: permit-to-esg-development
             scope: tenant
             subjects:
               - name: tcp
@@ -505,10 +505,10 @@ apic:
                   deployment_immediacy: immediate
                   resolution_immediacy: immediate
 
-        - name: 'network-security-groups'
+        - name: 'workload-security-groups'
           description: 'ESGs are used to define security groups' 
           endpoint_security_groups:
-            - name: 192.168.151.0_24
+            - name: production
               vrf: vrf-02
               shutdown: false
               intra_esg_isolation: false
@@ -518,11 +518,11 @@ apic:
                   endpoint_group: '192.168.151.0_24'
               contracts:
                 consumers:
-                  - permit-to-esg-192.168.152.0_24
+                  - permit-to-esg-development
                 providers:
-                  - permit-to-esg-192.168.151.0_24
+                  - permit-to-esg-production
 
-            - name: 192.168.152.0_24
+            - name: development
               vrf: vrf-02
               shutdown: false
               intra_esg_isolation: false
@@ -532,9 +532,9 @@ apic:
                   endpoint_group: '192.168.152.0_24'
               contracts:
                 consumers:
-                  - permit-to-esg-192.168.151.0_24
+                  - permit-to-esg-production
                 providers:
-                  - permit-to-esg-192.168.152.0_24
+                  - permit-to-esg-development
 
         - name: 'firewall-connectivity'
           endpoint_groups:
